@@ -4895,9 +4895,12 @@ void Server::handle_image_upscale(const httplib::Request& req, httplib::Response
             std::string new_path = cli_dir.string();
             std::string rocm_arch = SystemInfo::get_rocm_arch();
             if (!rocm_arch.empty()) {
-                std::string therock_bin = lemon::backends::BackendUtils::get_therock_lib_path(rocm_arch);
-                if (!therock_bin.empty()) {
-                    new_path = therock_bin + ";" + new_path;
+                std::vector<std::string> therock_dirs =
+                    lemon::backends::BackendUtils::get_therock_lib_paths(rocm_arch);
+                for (auto it = therock_dirs.rbegin(); it != therock_dirs.rend(); ++it) {
+                    if (!it->empty()) {
+                        new_path = *it + ";" + new_path;
+                    }
                 }
             }
 

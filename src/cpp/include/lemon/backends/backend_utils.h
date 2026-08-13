@@ -166,8 +166,13 @@ namespace lemon::backends {
         /** Clean up stale TheRock versions, keeping only the pinned ones */
         static void cleanup_old_therock_versions();
 
-        /** Get TheRock lib directory path if available, or empty string if not needed */
+        /** First TheRock runtime dir (_rocm_sdk_core/bin), or empty. Use
+         *  get_therock_lib_paths() for loader paths so the BLAS dir is included. */
         static std::string get_therock_lib_path(const std::string& rocm_arch);
+
+        /** All TheRock runtime dirs (loader-path order) from runtime_paths.txt, or
+         *  empty. All are needed to resolve both HIP and BLAS DLLs. */
+        static std::vector<std::string> get_therock_lib_paths(const std::string& rocm_arch);
 
         /** Join runtime library directories into a single loader-path string
          *  (';' on Windows, ':' elsewhere), converting each to an absolute path.
